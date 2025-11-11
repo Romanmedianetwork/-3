@@ -18,15 +18,46 @@
     text-shadow: 0 0 10px #ff66cc, 0 0 20px #ff66cc, 0 0 40px #ff66cc;
     transition: opacity 0.6s ease;
   }
-  #lyrics {
-    text-align: center;
-  }
+  #lyrics { text-align: center; }
 </style>
 </head>
 <body>
-  <div id="lyrics">Începe melodia...</div>
+  <div id="lyrics">Se încarcă...</div>
 
-  <!-- Adaugă melodia ta aici -->
-  <audio id="audio" src="te-as.mp3" preload="auto"></audio>
+  <audio id="audio" src="te-as.mp3" autoplay preload="auto"></audio>
+
+<script>
+  const lyrics = [
+    { time: 0, text: "Nu mă poți iubi" },
+    { time: 2, text: "Nu mă poți iubi" },
+    { time: 4, text: "Dar eu te-aș" },
+    { time: 7, text: "Te-aș iubi mereu dar nu mă lași" },
+    { time: 9, text: "Ce ai tu în minte doar eu știu" },
+    { time: 17, text: "Ce-ți place să faci noaptea târziu" },
+  ];
+
+  const audio = document.getElementById("audio");
+  const lyricsDiv = document.getElementById("lyrics");
+  let currentIndex = 0;
+
+  // încearcă să pornească audio periodic până reușește
+  let tryPlay = setInterval(() => {
+    audio.play().then(() => {
+      clearInterval(tryPlay);
+      console.log("Autoplay reușit!");
+    }).catch(() => {});
+  }, 500);
+
+  audio.addEventListener("timeupdate", () => {
+    if (currentIndex < lyrics.length && audio.currentTime >= lyrics[currentIndex].time) {
+      lyricsDiv.style.opacity = 0;
+      setTimeout(() => {
+        lyricsDiv.textContent = lyrics[currentIndex].text;
+        lyricsDiv.style.opacity = 1;
+      }, 400);
+      currentIndex++;
+    }
+  });
+</script>
 </body>
 </html>
